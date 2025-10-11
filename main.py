@@ -1,35 +1,17 @@
-import requests
-BASE = "https://vbr.example:9419"
-USER = "admin"
-PASS = "password"
-VERIFY = False  # or path, example: VERIFY="C:/ca/vbr.pem"
 
-class VBR:
-    def __init__(self):
-        self.s = requests.Session()
-        self.s.verify = VERIFY
-        self.token = None
+import urllib3
+from vbr import VBR
 
-    def auth(self):
-        try:
-            r = self.s.post(f"{BASE}/api/sessionMngr/?v=latest",
-                            json={"UserName": USER, "Password": PASS},
-                            timeout=10)
-            r.raise_for_status()
-            self.token = r.json().get("SessionId")
-            if self.token:
-                print("✅ Authorized")
-                return True
-        except requests.exceptions.RequestException:
-            pass
-        print("🚫 Failed to authorize. Check address, port and certificate.")
-        return False
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  #to remove SSL warning as I am using false
 
 
 def main():
+    print("START")
     vbr = VBR()
     vbr.auth()
-
+    vbr.get_repositories()
+    vbr.get_jobs()
+    print("END")
 
 if __name__ == "__main__":
     main()
