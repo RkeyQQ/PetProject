@@ -1,6 +1,6 @@
 import requests
 import json
-import configparser
+from urllib.parse import urlparse
 
 with open("secrets.json") as f:
     cfg = json.load(f)
@@ -18,10 +18,12 @@ class VBR:
         self.s = requests.Session()
         self.s.verify = VERIFY
         self.token = None
+        self.base = BASE
+        self.host = urlparse(BASE).hostname  # for saving in DB
 
     def auth(self):
         """Authenticate to Veeam REST API and store access token."""
-        url = f"{BASE}/api/oauth2/token"
+        url = f"{self.base}/api/oauth2/token"
         data = {
             "grant_type": "password",
             "username": USER,
@@ -44,7 +46,7 @@ class VBR:
         }
 
     def _get(self, path, params=None, label=None):
-        url = f"{BASE}{path}"
+        url = f"{self.base}{path}"
         try:
             r = self.s.get(url, headers=self._auth_headers(), params=params or {}, timeout=10)
             r.raise_for_status()
