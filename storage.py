@@ -22,3 +22,88 @@ def save_raw(path, host, object_type, data):
 def cleanup_retention(path, days):
     with sqlite3.connect(path) as c:
         c.execute("DELETE FROM raw_events WHERE created_at < datetime('now','-%d days')" % days)
+
+def init_repo_state_table(path):
+    with sqlite3.connect(path) as c:
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS repo_states (
+          repo_id TEXT NOT NULL,
+          host TEXT NOT NULL,
+          name TEXT,
+          rtype TEXT,
+          path TEXT,
+          capacity_gb REAL,
+          free_gb REAL,
+          used_gb REAL,
+          is_online TEXT,
+          is_out_of_date TEXT,
+          created_at TEXT NOT NULL,
+          PRIMARY KEY (repo_id, created_at)
+        )""")
+
+def load_repo_states(path, host, payload):
+    now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    rows = []
+    for it in payload.get("data", []):
+        rows.append((
+            it.get("id"),
+            host,
+            it.get("name"),
+            it.get("type"),
+            it.get("path"),
+            it.get("capacityGB"),
+            it.get("freeGB"),
+            it.get("usedSpaceGB"),
+            str(bool(it.get("isOnline"))).lower(),
+            str(it.get("isOutOfDate")),
+            now,
+        ))
+    if not rows:
+        return
+    with sqlite3.connect(path) as c:
+        c.executemany("""
+        INSERT INTO repo_states(
+          repo_id, host, name, rtype, path, capacity_gb, free_gb, used_gb, is_online, is_out_of_date, created_at
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?)""", rows)
+
+def init_job_state_table(path):
+    with sqlite3.connect(path) as c:
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS job_states (
+          job_id TEXT NOT NULL,
+          host TEXT NOT NULL,
+          name TEXT,
+          jtype TEXT,
+          last_result TEXT,
+          is_running TEXT,
+          progress REAL,
+          last_run TEXT,
+          next_run TEXT,
+          created_at TEXT NOT NULL,
+          PRIMARY KEY (job_id, created_at)
+        )""")
+
+def load_job_states(path, host, payload):
+    now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    rows = []
+    for it in payload.get("data", []):
+        rows.append((
+            it.get("id"),
+            host,
+            it.get("name"),
+            it.get("type"),
+            it.get("lastResult"),
+            str(bool(it.get("isRunning"))).lower(),
+            it.get("progress"),
+            it.get("lastRun"),
+            it.get("nextRun"),
+            now,
+        ))
+    if not rows:
+        return
+    with sqlite3.connect(path) as c:
+        c.executemany("""
+        INSERT INTO job_states(
+          job_id, host, name, jtype, last_result, is_running,
+          progress, last_run, next_run, created_at
+        ) VALUES (?,?,?,?,?,?,?,?,?,?)""", rows)

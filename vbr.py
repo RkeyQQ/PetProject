@@ -59,13 +59,13 @@ class VBR:
             VBR._print_http_error(e)
             return None
 
-    def get_repositories(self, limit=LIMIT):
-        return self._get("/api/v1/backupInfrastructure/repositories",
-                         {"limit": limit}, "repositories")
+    def get_repositories_states(self, limit=LIMIT):
+        return self._get("/api/v1/backupInfrastructure/repositories/states",
+                         {"limit": limit}, "repository states")
 
-    def get_jobs(self, limit=LIMIT):
-        return self._get("/api/v1/jobs",
-                         {"limit": limit}, "jobs")
+    def get_jobs_states(self, limit=LIMIT):
+        return self._get("/api/v1/jobs/states",
+                         {"limit": limit}, "job states")
 
     @staticmethod
     def _print_http_error(e):
