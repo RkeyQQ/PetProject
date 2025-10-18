@@ -12,6 +12,7 @@ def init_db(path):
         )""")
 
 def save_raw(path, host, object_type, data):
+    '''raw api data'''
     now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     with sqlite3.connect(path) as c:
         c.execute(

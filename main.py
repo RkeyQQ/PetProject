@@ -15,7 +15,6 @@ DB_PATH = cfg["DB_PATH"]
 RETENTION_DAYS = cfg["RETENTION_DAYS"]
 
 
-
 def main():
     print("START")
 
@@ -43,6 +42,7 @@ def main():
 
     cleanup_retention(DB_PATH, RETENTION_DAYS)
     print("END")
+
 
 if __name__ == "__main__":
     main()
