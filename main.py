@@ -1,6 +1,7 @@
 import os
 import json
-from storage import init_db, save_raw, cleanup_retention, init_repo_state_table, load_repo_states, load_job_states
+from storage import init_db, save_raw, cleanup_retention, init_repo_state_table, load_repo_states, load_job_states, \
+    init_job_state_table
 from vbr import VBR
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  #to remove SSL warning as I am using false
@@ -18,10 +19,13 @@ RETENTION_DAYS = cfg["RETENTION_DAYS"]
 def main():
     print("START")
 
+    '''working with db'''
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     init_db(DB_PATH)
     init_repo_state_table(DB_PATH)
+    init_job_state_table(DB_PATH)
 
+    '''connect and collect'''
     vbr = VBR()
     vbr.auth()
 
@@ -41,7 +45,6 @@ def main():
             load_db_method(DB_PATH, vbr.host, data)
 
     cleanup_retention(DB_PATH, RETENTION_DAYS)
-    print("END")
 
 
 if __name__ == "__main__":
