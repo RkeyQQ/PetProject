@@ -57,6 +57,8 @@ class VBR:
             return data
         except requests.HTTPError as e:
             VBR._print_http_error(e)
+        except requests.RequestException as e:
+            print(f"🚫 {e.__class__.__name__}: {e}")
             return None
 
     def get_repositories_states(self, limit=LIMIT):
