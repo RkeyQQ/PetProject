@@ -45,6 +45,7 @@ def main():
             load_db_method(DB_PATH, vbr.host, data)
 
     cleanup_retention(DB_PATH, RETENTION_DAYS)
+    print("END")
 
 
 if __name__ == "__main__":
