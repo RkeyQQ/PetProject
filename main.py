@@ -1,10 +1,20 @@
 import os
 import json
-from storage import init_db, save_raw, cleanup_retention, init_repo_state_table, load_repo_states, load_job_states, \
-    init_job_state_table
+from storage import (
+    init_db,
+    save_raw,
+    cleanup_retention,
+    init_repo_state_table,
+    load_repo_states,
+    load_job_states,
+    init_job_state_table,
+)
 from vbr import VBR
 import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  #to remove SSL warning as I am using false
+
+urllib3.disable_warnings(
+    urllib3.exceptions.InsecureRequestWarning
+)  # to remove SSL warning as I am using false
 
 
 with open("secrets.json") as f:
@@ -17,20 +27,43 @@ RETENTION_DAYS = cfg["RETENTION_DAYS"]
 
 
 def main():
+    """Initialize the database, create tables, and start the collector.
+
+    Initializes the DB directory and schema, then calls vbr_collector()
+    to fetch and load data.
+    """
     print("START")
 
-    '''working with db'''
+    # initialize DB and tables
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     init_db(DB_PATH)
     init_repo_state_table(DB_PATH)
     init_job_state_table(DB_PATH)
 
-    '''connect and collect'''
+    # start data collection
+    vbr_collector()
+
+    print("END")
+
+
+def vbr_collector():
+    """Collect data from VBR and load into the database.
+
+    Authenticates with VBR, fetches data based on the COLLECT list,
+    saves raw data, and loads it into the database. Cleans up old data
+    based on retention policy.
+
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> REFACTOR NEEDED
+    """
     vbr = VBR()
     vbr.auth()
 
     dispatch = {
-        "repository_states": ("repositories", vbr.get_repositories_states, load_repo_states),
+        "repository_states": (
+            "repositories",
+            vbr.get_repositories_states,
+            load_repo_states,
+        ),
         "job_states": ("jobs", vbr.get_jobs_states, load_job_states),
     }
     for item in COLLECT:
@@ -45,9 +78,7 @@ def main():
             load_db_method(DB_PATH, vbr.host, data)
 
     cleanup_retention(DB_PATH, RETENTION_DAYS)
-    print("END")
 
 
 if __name__ == "__main__":
     main()
-
