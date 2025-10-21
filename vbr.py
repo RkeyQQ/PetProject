@@ -13,8 +13,12 @@ VERIFY = cfg["VERIFY"]
 API_VER = cfg["API_VER"]
 LIMIT = cfg.get("LIMIT", 200)
 
+
 class VBR:
+    """Veeam Backup & Replication REST API client."""
+
     def __init__(self):
+        """Initialize VBR client with base URL and session."""
         self.s = requests.Session()
         self.s.verify = VERIFY
         self.token = None
@@ -24,11 +28,7 @@ class VBR:
     def auth(self):
         """Authenticate to Veeam REST API and store access token."""
         url = f"{self.base}/api/oauth2/token"
-        data = {
-            "grant_type": "password",
-            "username": USER,
-            "password": PASS
-        }
+        data = {"grant_type": "password", "username": USER, "password": PASS}
         try:
             r = self.s.post(url, data=data, timeout=10)
             r.raise_for_status()
@@ -46,13 +46,23 @@ class VBR:
         }
 
     def _get(self, path, params=None, label=None):
+        """Perform a GET request to the specified API path with optional params.
+
+        Args:
+            path (str): API endpoint path.
+            params (dict, optional): Query parameters for the request.
+            label (str, optional): Label for logging purposes.
+
+        """
         url = f"{self.base}{path}"
         try:
-            r = self.s.get(url, headers=self._auth_headers(), params=params or {}, timeout=10)
+            r = self.s.get(
+                url, headers=self._auth_headers(), params=params or {}, timeout=10
+            )
             r.raise_for_status()
             data = r.json()
             if label:
-                count = len(data) if isinstance(data, list) else 'n/a'
+                count = len(data) if isinstance(data, list) else "n/a"
                 print(f"✅ Got {label}: {count}")
             return data
         except requests.HTTPError as e:
@@ -62,17 +72,24 @@ class VBR:
             return None
 
     def get_repositories_states(self, limit=LIMIT):
-        return self._get("/api/v1/backupInfrastructure/repositories/states",
-                         {"limit": limit}, "repository states")
+        """Get repository states from VBR."""
+        return self._get(
+            "/api/v1/backupInfrastructure/repositories/states",
+            {"limit": limit},
+            "repository states",
+        )
 
     def get_jobs_states(self, limit=LIMIT):
-        return self._get("/api/v1/jobs/states",
-                         {"limit": limit}, "job states")
+        """Get job states from VBR."""
+        return self._get("/api/v1/jobs/states", {"limit": limit}, "job states")
 
     @staticmethod
     def _print_http_error(e):
+        """Print detailed HTTP error message from requests.HTTPError."""
         resp = e.response
-        if resp is not None and resp.headers.get("Content-Type", "").startswith("application/json"):
+        if resp is not None and resp.headers.get("Content-Type", "").startswith(
+            "application/json"
+        ):
             err = resp.json()
             msg = (
                 f"{err.get('title', 'Error')}: "
