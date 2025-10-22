@@ -1,8 +1,10 @@
+// Entry point: sets up React root and routing
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home";
+import SelfCheck from "./pages/SelfCheck";
 import Monitor from "./pages/Monitor";
 
 const router = createBrowserRouter([
@@ -11,6 +13,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
+      { path: "selfcheck", element: <SelfCheck /> },
       { path: "monitor", element: <Monitor /> },
     ],
   },
