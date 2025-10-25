@@ -30,7 +30,7 @@ export default function Home() {
     {
       title: "Evaluate Cloud Monitoring",
       text: "Cloud-based infrastructure monitoring and management. Endless possibilities, zero overhead.",
-      link: "/",
+      link: "/demo",
       linkText: "Try Demo",
     },
     {
@@ -48,7 +48,7 @@ export default function Home() {
   ];
 
   const heroTitle = {
-    fontSize: 48,
+    fontSize: "clamp(24px, 5vw, 48px)",
     lineHeight: 1.1,
     fontWeight: 700,
     textAlign: "center",
@@ -57,7 +57,7 @@ export default function Home() {
   };
 
   const heroSubtitle = {
-    fontSize: 18,
+    fontSize: "clamp(14px, 2.2vw, 18px)",
     color: "#555",
     textAlign: "center",
     margin: "0 0 28px 0",

@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home";
 import SelfCheck from "./pages/SelfCheck";
-import Monitor from "./pages/Monitor";
+import Demo from "./pages/Demo";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "selfcheck", element: <SelfCheck /> },
-      { path: "monitor", element: <Monitor /> },
+      { path: "demo", element: <Demo /> },
     ],
   },
 ]);

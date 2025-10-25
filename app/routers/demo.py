@@ -1,45 +1,50 @@
-from fastapi import APIRouter, HTTPException
-from datetime import datetime, timedelta
-import random
+from fastapi import APIRouter, HTTPException, Query
 
-from app.db import get_conn  # добавили импорт
+from app.db_context import get_conn
 
 router = APIRouter()
 
-@router.get("/summary")
-def demo_summary():
-    """Synth to test - remove later"""
-    return {
-        "targets": 5,
-        "jobs": 12,
-        "lastRunAt": datetime.utcnow().isoformat() + "Z",
-        "okRate": round(random.uniform(0.8, 0.99), 2),
-    }
 
+@router.get("/table/{name}/rows")
+def table_rows(
+    name: str,
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+):
+    """Review tables.
 
-@router.get("/series")
-def demo_series(points: int = 30):
-    """Synth to test - remove later"""
-    now = datetime.utcnow()
-    data = []
-    for i in range(points):
-        t = now - timedelta(minutes=points - i)
-        value = 70 + random.randint(-5, 5)
-        data.append({"ts": t.isoformat() + "Z", "value": value})
-    return {"series": data}
-
-
-@router.get("/summary-db")
-def demo_summary_from_db():
-    """Counters to test - remove later"""
+    Security: table name validate by sqlite_master
+    LIMIT/OFFSET params.
+    """
     try:
         with get_conn() as conn:
-            cnt_job = conn.execute("SELECT COUNT(*) AS c FROM job_states").fetchone()["c"]
-            cnt_repo = conn.execute("SELECT COUNT(*) AS c FROM repo_states").fetchone()["c"]
-        return {
-            "job_states_rows": cnt_job,
-            "repo_states_rows": cnt_repo,
-            "pulledAt": datetime.utcnow().isoformat() + "Z",
-        }
+            # check if exists
+            row = conn.execute(
+                "select name from sqlite_master where type='table' and name=?",
+                (name,),
+            ).fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail=f"Table '{name}' not found")
+
+            # get lines with limit/offset
+            cur = conn.execute(
+                f"select * from {name} limit ? offset ?", (limit, offset)
+            )
+            rows = cur.fetchall()
+            cols = [d[0] for d in cur.description] if cur.description else []
+
+            # convert to list of dicts
+            data = [dict(r) for r in rows]
+
+            return {
+                "table": name,
+                "columns": cols,
+                "count": len(data),
+                "limit": limit,
+                "offset": offset,
+                "rows": data,
+            }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

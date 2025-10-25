@@ -18,14 +18,16 @@ export default function App() {
     <div
       style={{
         width: "100%",
-        maxWidth: 1200,
+        // maxWidth: "min(1200px, 100%)",
         margin: "0px auto",
-        padding: "0 16px",
+        padding: "16 16px",
         fontFamily: "ui-sans-serif, system-ui",
       }}
     >
+      {/* HEADER */}
       <header
         style={{
+          minHeight: 32,
           padding: "16px 32px",
           background: "#a8bcffff",
         }}
@@ -36,7 +38,37 @@ export default function App() {
           </Link>
         </div>
       </header>
+
+      {/* MAIN CONTENT */}
       <Outlet />
+
+      {/* FOOTER */}
+      <footer
+        style={{
+          textAlign: "left",
+
+          padding: "0 32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          minHeight: 64,
+
+          background: "#a8bcffff",
+          borderTop: "1px solid #eee",
+          color: "#666",
+          fontSize: 14,
+        }}
+      >
+        Made by&nbsp;{" "}
+        <a
+          href="https://www.linkedin.com/in/roman-kuksov/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#4a6cff", textDecoration: "none" }}
+        >
+          Roman Key
+        </a>
+      </footer>
     </div>
   );
 }
