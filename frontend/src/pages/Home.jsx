@@ -1,70 +1,90 @@
-import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [info, setInfo] = useState(null);
+  const { pathname } = useLocation();
+  const cardStyle = {
+    flex: "1",
+    minWidth: 260,
+    maxWidth: 200,
+    background: "#fff",
+    borderRadius: 12,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+    padding: "20px",
+    margin: "12px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  };
+  const linkStyle = (active) => ({
+    display: "inline-block",
+    minWidth: 90,
+    textAlign: "center",
+    padding: "8px 12px",
+    textDecoration: "none",
+    color: active ? "#111" : "#222",
+    background: active ? "#e7f1ff" : "#e7f1ff",
+    borderRadius: 10,
+    border: active ? "1px solid #c9defc" : "1px solid #c9defc",
+  });
+  const cards = [
+    {
+      title: "Evaluate Cloud Monitoring",
+      text: "Cloud-based infrastructure monitoring and management. Endless possibilities, zero overhead.",
+      link: "/",
+      linkText: "Try Demo",
+    },
+    {
+      title: "Download On-Premises Solution",
+      text: "Monitor your infrastructure with our on-premises solution for maximum control and security.",
+      link: "/",
+      linkText: "Download Now",
+    },
+    {
+      title: "Subscribe to Premium",
+      text: "Unlimited access to all features, priority support, and exclusive updates with our Premium plan.",
+      link: "/",
+      linkText: "Subscribe",
+    },
+  ];
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const res = await fetch("/api/db/ping");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setInfo(data);
-      } catch (e) {
-        setError(e.message || String(e));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const heroTitle = {
+    fontSize: 48,
+    lineHeight: 1.1,
+    fontWeight: 700,
+    textAlign: "center",
+    margin: "0 0 12px 0",
+    letterSpacing: "-0.02em",
+  };
+
+  const heroSubtitle = {
+    fontSize: 18,
+    color: "#555",
+    textAlign: "center",
+    margin: "0 0 28px 0",
+  };
 
   return (
-    <section>
-      <h2 style={{ marginTop: 0 }}>Self Check</h2>
-      <p style={{ color: "#666" }}>
-        Backend check → <code>/api/db/ping</code>
-      </p>
-
-      {loading && <p>Loading…</p>}
-      {error && (
-        <div
-          style={{
-            background: "#fee",
-            border: "1px solid #fcc",
-            padding: 12,
-            borderRadius: 8,
-          }}
-        >
-          Error: {error}
-        </div>
-      )}
-
-      {info && (
-        <div
-          style={{
-            background: "#f7f7f7",
-            border: "1px solid #eee",
-            padding: 16,
-            borderRadius: 12,
-          }}
-        >
-          <div>
-            <strong>SQLite:</strong> {info.sqlite_version ?? "—"}
+    <section
+      style={{
+        background: "#d0f5d5ff",
+        padding: "24px",
+      }}
+    >
+      <h1 style={heroTitle}>Monitoring Hub</h1>
+      <p style={heroSubtitle}>All your infrastructure insights in one place.</p>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
+        {cards.map((c, i) => (
+          <div key={i} style={cardStyle}>
+            <h3 style={{ margin: 0 }}>{c.title}</h3>
+            <p style={{ color: "#555" }}>{c.text}</p>
+            <Link to={c.link} style={linkStyle(pathname === c.link)}>
+              {c.linkText}
+            </Link>
           </div>
-          <div style={{ marginTop: 8 }}>
-            <strong>Tables:</strong>
-            <ul>
-              {(info.tables ?? []).map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+        ))}
+      </div>
     </section>
   );
 }
