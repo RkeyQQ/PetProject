@@ -7,19 +7,26 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  font-family: system-ui;
-  
+    
   min-height: 100vh;
   width: 100%;  
-}
-
-.header-right {
-   margin-left: auto;
 }
 
 .main {
   display: flex;
   flex: 1;  
+}
+
+.main-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  text-align: left;
+  background: #18181a;
+  padding-top: 64px;
+  padding: 0 12px;
 }
 
 .app-bar {
@@ -28,7 +35,7 @@ body {
   justify-content: flex-start;
 
   min-height: 64px;
-  padding: 0px 32px;
+  padding: 0px 16px;
 
   background: #18181a;
   color: #666;
@@ -37,6 +44,10 @@ body {
 
 .header { border-bottom: 1px solid #263a27ff; }
 .footer { border-top: 1px solid #263a27ff; }
+
+.align-right {
+  margin-left: auto;  
+}
 
 .link {
   display: inline-block;
@@ -54,6 +65,12 @@ body {
   background: #478b46ff;
 }
 
+.link.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
 .text-link {
   color: #f6f7f6ff;
   text-decoration: none;
@@ -68,11 +85,11 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 0 auto;
-  max-width: 1200px;
+  margin: 0 auto;  
 }
 
 .card {
+  box-sizing: border-box; 
   flex: 1;
   min-width: 220px;  
   max-width: 260px;  
@@ -84,22 +101,45 @@ body {
 
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-align: left;
+}
+
+.card.wide {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  align-self: stretch;
+  margin: 20px 0px;
 }
 
 .card h3 {
   margin: 0;
   font-size: 28px;
   color: #f6f7f6ff;
+  text-align: left;
 }
 
 .card p {
   color: #f6f7f6ff;  
-  font-size: 20px;  
+  font-size: 18px;  
   text-align: left;
-  padding: 0 0 0 12px;
+  padding: 0 0 0 0;
+}
+
+.card ul {
+  margin: 4px 0 0;
+  padding-left: 2rem;
+  color: #f6f7f6ff;
+  font-size: 18px;
+  text-align: left;
+}
+
+.card .link,
+.card .link.disabled {  
+  margin-top: auto;
 }
 
 .hero-title {
@@ -123,15 +163,4 @@ body {
   text-transform: uppercase;
   text-align: center;
   margin: 0 0 28px 0;
-}
-
-.main-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  background: #18181a;
-  padding-top: 64px;
 }

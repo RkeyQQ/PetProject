@@ -1,6 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import "@fontsource/inter/300.css";
-import "@fontsource/inter/500.css";
 
 export default function Home() {
   const { pathname } = useLocation();
@@ -14,14 +12,16 @@ export default function Home() {
     {
       title: "On-Premises Solution",
       text: "Monitor your infrastructure with our on-premises solution for maximum control and security.",
-      link: "/",
+      link: "https://github.com/RkeyQQ/PetProject",
       linkText: "Download Now",
+      external: true,
     },
     {
       title: "Subscribe to Premium",
       text: "Unlimited access to all features, priority support, and exclusive updates with our Premium plan.",
       link: "/",
       linkText: "Subscribe",
+      disabled: true,
     },
   ];
 
@@ -36,12 +36,25 @@ export default function Home() {
           <div key={i} className="card">
             <h3>{c.title}</h3>
             <p>{c.text}</p>
-            <Link
-              to={c.link}
-              className={`link${pathname === c.link ? " active" : ""}`}
-            >
-              {c.linkText}
-            </Link>
+            {c.disabled ? (
+              <span className="link disabled">{c.linkText}</span>
+            ) : c.external ? (
+              <a
+                href={c.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+              >
+                {c.linkText}
+              </a>
+            ) : (
+              <Link
+                to={c.link}
+                className={`link${pathname === c.link ? " active" : ""}`}
+              >
+                {c.linkText}
+              </Link>
+            )}
           </div>
         ))}
       </div>
