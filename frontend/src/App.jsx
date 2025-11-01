@@ -8,7 +8,7 @@ export default function App() {
       {/* HEADER */}
 
       <header className="app-bar header">
-        <div className="header-right">
+        <div className="align-right">
           <Link
             to="/selfcheck"
             className={`link${pathname === "/selfcheck" ? " active" : ""}`}

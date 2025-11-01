@@ -7,8 +7,6 @@ import Home from "./pages/Home";
 import SelfCheck from "./pages/SelfCheck";
 import Demo from "./pages/Demo";
 import "./index.css";
-import "@fontsource/inter/300.css";
-import "@fontsource/inter/500.css";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +21,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
 );

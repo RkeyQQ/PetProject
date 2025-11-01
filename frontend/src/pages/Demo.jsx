@@ -1,19 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
 import { useApiData } from "../hooks/useApiData";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  getSortedRowModel,
+} from "@tanstack/react-table";
+import { useEffect, useState } from "react";
+import "./Demo.css";
 
 export default function Demo() {
   const { pathname } = useLocation();
-  const linkStyle = (active) => ({
-    display: "inline-block",
-    minWidth: 90,
-    textAlign: "center",
-    padding: "8px 12px",
-    textDecoration: "none",
-    color: active ? "#111" : "#222",
-    background: active ? "#e7f1ff" : "#e7f1ff",
-    borderRadius: 10,
-    border: active ? "1px solid #c9defc" : "1px solid #c9defc",
-  });
 
   const {
     data: info,
@@ -21,123 +18,145 @@ export default function Demo() {
     loading,
   } = useApiData("demo/table/job_states/rows");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  const columns = [
+    { header: "Last Result", accessorKey: "last_result" },
+    { header: "Job Name", accessorKey: "name" },
+    { header: "Backup Server", accessorKey: "host" },
+    { header: "Job Type", accessorKey: "jtype" },
+    { header: "Last Run", accessorKey: "last_run" },
+    { header: "Next Run", accessorKey: "next_run" },
+    { header: "Created At", accessorKey: "created_at" },
+  ];
+
+  const data = info?.rows ?? [];
+
+  const [sorting, setSorting] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [columnSizing, setColumnSizing] = useState(() => {
+    const saved = localStorage.getItem("demoColumnSizing");
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem("demoColumnSizing", JSON.stringify(columnSizing));
+  }, [columnSizing]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { sorting, columnVisibility, columnSizing },
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onColumnSizingChange: setColumnSizing,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    columnResizeMode: "onChange",
+  });
 
   return (
-    <section
-      style={{
-        background: "#f0fff2ff",
-        padding: "24px",
-      }}
-    >
-      <h2 style={{ marginTop: 0 }}>The Demo</h2>
-      <p style={{ color: "#666", marginTop: 0 }}>
-        Backup Jobs → <code>demo/table/job_states/rows</code>
-      </p>
+    <section className="main-section">
+      <h1 className="hero-title">THE Demo</h1>
+      <p className="hero-subtitle">Main Dashboard</p>
 
-      {loading && <p>Loading…</p>}
+      {loading && <p className="hero-subtitle">Loading…</p>}
       {error && (
-        <div
-          style={{
-            background: "#fee",
-            border: "1px solid #fcc",
-            padding: 12,
-            borderRadius: 8,
-          }}
-        >
+        <div className="hero-subtitle" style={{ color: "red" }}>
           Error: {error}
         </div>
       )}
+
       {info && (
-        <div
-          style={{
-            background: "#f7f7f7",
-            border: "1px solid #eee",
-            padding: 16,
-            borderRadius: 12,
-            marginBottom: 16,
-          }}
-        >
+        <div className="card wide">
+          <p className="table-title">
+            Backup Jobs → <code>demo/table/job_states/rows</code>
+          </p>
+
+          <div className="col-controls">
+            {table
+              .getAllLeafColumns()
+              .filter((col) => col.getCanHide?.() ?? true)
+              .map((col) => (
+                <label key={col.id} className="col-toggle">
+                  <input
+                    type="checkbox"
+                    checked={col.getIsVisible()}
+                    onChange={col.getToggleVisibilityHandler()}
+                  />
+                  {String(col.columnDef.header ?? col.id)}
+                </label>
+              ))}
+          </div>
+
           <div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table className="data-table">
               <thead>
-                <tr>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Last Result
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Job Name
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Backup Server
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Job Type
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Last Run
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Next Run
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                    }}
-                  >
-                    Created At
-                  </th>
-                </tr>
+                {table.getHeaderGroups().map((hg) => (
+                  <tr key={hg.id}>
+                    {hg.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        onClick={(e) => {
+                          if (
+                            e.target instanceof HTMLElement &&
+                            e.target.closest(".resizer")
+                          )
+                            return;
+                          header.column.getToggleSortingHandler()(e);
+                        }}
+                        className="th th-sortable"
+                        style={{ width: header.getSize() }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        <span className="sort-ind">
+                          {{ asc: "▲", desc: "▼" }[
+                            header.column.getIsSorted()
+                          ] ?? ""}
+                        </span>
+
+                        <div
+                          className={`resizer ${
+                            header.column.getIsResizing() ? "isResizing" : ""
+                          }`}
+                          draggable={false}
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            header.getResizeHandler()(e);
+                          }}
+                          onPointerDown={(e) => {
+                            e.stopPropagation();
+                            header.getResizeHandler()(e);
+                          }}
+                          onTouchStart={(e) => {
+                            e.stopPropagation();
+                            header.getResizeHandler()(e);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          onDragStart={(e) => e.preventDefault()}
+                        />
+                      </th>
+                    ))}
+                  </tr>
+                ))}
               </thead>
+
               <tbody>
-                {(info?.rows ?? []).map((r) => (
-                  <tr key={r.job_id}>
-                    <td style={{ padding: 8 }}>{r.last_result}</td>
-                    <td style={{ padding: 8 }}>{r.name}</td>
-                    <td style={{ padding: 8 }}>{r.host}</td>
-                    <td style={{ padding: 8 }}>{r.jtype}</td>
-                    <td style={{ padding: 8 }}>{r.last_run}</td>
-                    <td style={{ padding: 8 }}>{r.next_run}</td>
-                    <td style={{ padding: 8 }}>{r.created_at}</td>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="td"
+                        style={{ width: cell.column.getSize() }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
@@ -146,8 +165,8 @@ export default function Demo() {
         </div>
       )}
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Link to="/" style={linkStyle(pathname === "/")}>
+      <div className="align-right">
+        <Link to="/" className={`link${pathname === "/" ? " active" : ""}`}>
           Back
         </Link>
       </div>
