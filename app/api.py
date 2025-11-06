@@ -14,5 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/api/status")
+def status():
+    return {"status": "ok"}
+
+
 app.include_router(demo.router, prefix="/api/demo", tags=["Data For Demo"])
 app.include_router(dbutils.router, prefix="/api/db", tags=["Database Utilities"])

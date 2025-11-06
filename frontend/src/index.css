@@ -2,6 +2,7 @@ body {
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 400;
+  background: #18181a;
 }
 
 .app {
