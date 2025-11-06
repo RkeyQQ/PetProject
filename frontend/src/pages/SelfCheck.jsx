@@ -5,9 +5,6 @@ export default function SelfCheck() {
   const { pathname } = useLocation();
   const { data: info, error, loading } = useApiData("db/ping");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-
   return (
     <section className="main-section">
       <h1 className="hero-title">Self Check</h1>
