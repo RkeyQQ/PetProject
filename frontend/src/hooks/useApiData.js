@@ -10,7 +10,9 @@ export function useApiData(endpoint) {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`/api/${endpoint}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/${endpoint}`
+        );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setData(data);
