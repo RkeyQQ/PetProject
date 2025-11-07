@@ -1,0 +1,33 @@
+# --- system / IDE ---
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# --- virtual envs ---
+.venv
+env/
+venv/
+
+# --- node / frontend ---
+frontend/
+node_modules/
+*.log
+
+# --- local data ---
+*.db
+*.sqlite3
+*.sqlite
+data/tmp/
+*.env
+.env
+.env.*
+
+# --- misc ---
+*.bak
+*.swp
