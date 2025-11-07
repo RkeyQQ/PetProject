@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from app.routers import demo
-from app.routers import dbutils
+from backend.routers import demo
+from backend.routers import dbutils
 
 app = FastAPI(title="Monitoring Hub API", openapi_url="/api/openapi.json")
 
@@ -17,6 +16,7 @@ app.add_middleware(
 
 @app.get("/api/status")
 def status():
+    """Return the status."""
     return {"status": "ok"}
 
 
