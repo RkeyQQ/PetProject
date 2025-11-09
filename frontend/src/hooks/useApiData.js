@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export function useApiData(endpoint) {
   const [data, setData] = useState(null);
@@ -10,12 +11,10 @@ export function useApiData(endpoint) {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/${endpoint}`
-        );
+        const res = await fetch(`${API_BASE}/api/${endpoint}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setData(data);
+        const json = await res.json();
+        setData(json);
       } catch (e) {
         setError(e.message);
       } finally {

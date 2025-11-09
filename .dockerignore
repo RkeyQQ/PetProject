@@ -31,3 +31,6 @@ data/tmp/
 # --- misc ---
 *.bak
 *.swp
+
+# --- Synthetic files ---
+!data/data_synth.db
