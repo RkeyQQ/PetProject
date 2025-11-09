@@ -22,13 +22,16 @@ dist-ssr
 *.sln
 *.sw?
 
-# === React ===
+# React
 frontend/node_modules/
 
-# === Project ===
+# Project
 .venv/
 __pycache__/
 *.pyc
 data.db
 secrets.json
 data/*.py
+
+# Synthetic files
+!data/data_synth.db
