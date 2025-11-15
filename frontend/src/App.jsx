@@ -8,6 +8,18 @@ export default function App() {
       {/* HEADER */}
 
       <header className="app-bar header">
+        <Link to="/" className="brand" style={{ textDecoration: "none" }}>
+          <img
+            src="/logo.png"
+            alt="Monitoring Hub logo"
+            className="brand-logo"
+          />
+          <div className="brand-name">
+            <span className="brand-accent">M</span>ONITORING &nbsp;
+            <span className="brand-accent">H</span>UB
+          </div>
+        </Link>
+
         <div className="align-right">
           <Link
             to="/selfcheck"

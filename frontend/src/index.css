@@ -7,8 +7,7 @@ body {
 
 .app {
   display: flex;
-  flex-direction: column;
-    
+  flex-direction: column;    
   min-height: 100vh;
   width: 100%;  
 }
@@ -30,6 +29,29 @@ body {
   padding: 0 12px;
 }
 
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  text-align: left;
+}
+
+.hero-section {
+  background: #262629ff;  
+  padding-top: 64px;  
+  padding: 0 12px 32px;
+}
+
+.info-section {
+  flex: 1;
+  background: #2F2F31ff;    
+  color: #f6f7f6ff;
+  padding: 20px 12px;  
+  text-align: center;
+}
+
 .app-bar {
   display: flex;
   align-items: center;
@@ -43,8 +65,31 @@ body {
   font-size: 14px;
 }
 
-.header { border-bottom: 1px solid #263a27ff; }
-.footer { border-top: 1px solid #263a27ff; }
+.header { border-bottom: 2px solid #263a27ff; }
+.footer { border-top: 2px solid #263a27ff; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.brand-name {
+  font-size: 28px;
+  line-height: 1;
+  color: #f6f7f6ff;
+  text-transform: uppercase;  
+}
+
+.brand-accent {
+  color: #59ba57ff;
+  font-weight: 500;
+}
 
 .align-right {
   margin-left: auto;  
@@ -94,8 +139,8 @@ body {
   flex: 1;
   min-width: 220px;  
   max-width: 260px;  
-  background: #262629ff;
-  border: 1px solid #77777bff;
+  background: #2F2F31ff;
+  border: 1px solid #478b46ff ;
   border-radius: 12px;  
   padding: 20px;
   margin: 20px;
@@ -108,12 +153,22 @@ body {
   text-align: left;
 }
 
+.card.mid.wide {
+  flex: 0 0 auto;
+  width: clamp(320px, 60vw, 53%);
+  max-width: 100%;  
+  border: 0px;
+  padding: 0px;
+  margin: auto;  
+}
+
 .card.wide {
   flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
-  align-self: stretch;
+  align-self: center;
   margin: 20px 0px;
+
 }
 
 .card h3 {
@@ -130,6 +185,11 @@ body {
   padding: 0 0 0 0;
 }
 
+.card.mid.wide p {
+text-align: justify; 
+margin: 12px 0 12px 0;    
+}
+
 .card ul {
   margin: 4px 0 0;
   padding-left: 2rem;
@@ -143,25 +203,21 @@ body {
   margin-top: auto;
 }
 
-.hero-title {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(24px, 10vw, 100px);
+.hero-title {  
+  font-size: clamp(24px, 10vw, 50px);
   color: #f6f7f6ff;
   line-height: 1.1;
   font-weight: 500;
-  text-align: center;
-  text-transform: uppercase;
-  margin: 0 0 6px 0;
+  text-align: center;  
+  margin: 28px 0 28px 0;
   letter-spacing: -0.02em;
 }
 
-.hero-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(14px, 2.2vw, 18px);
+.hero-subtitle {  
+  font-size: clamp(22px, 2.2vw, 28px);
   color: #f6f7f6ff;
-  line-height: 1.1;
-  font-weight: 300;
-  text-transform: uppercase;
+  line-height: 1.4;
+  font-weight: 300;  
   text-align: center;
-  margin: 0 0 28px 0;
+  margin: 18px 0 16px 0;
 }
