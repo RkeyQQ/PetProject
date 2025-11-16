@@ -11,9 +11,9 @@ export default function Home() {
     },
     {
       title: "On-Premises Solution",
-      text: "Monitor your infrastructure with our on-premises solution for maximum control and security.",
+      text: "Monitor your infrastructure with on-premises solution for maximum control and security.",
       link: "https://github.com/RkeyQQ/PetProject",
-      linkText: "Download (Github)",
+      linkText: "Download (GitHub)",
       external: true,
     },
     {
