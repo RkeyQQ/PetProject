@@ -28,28 +28,32 @@ export default function Demo() {
   const { pathname } = useLocation();
 
   return (
-    <section className="main-section">
-      <h1 className="hero-title"> Demo Dashboard</h1>
+    <div className="demo">
+      <section className="title-section">
+        <h1 className="dashboard-title"> Demo Dashboard</h1>
+      </section>
 
-      <TableGrid
-        title="Backup Jobs"
-        endpoint="demo/table/job_states/rows"
-        columns={jobColumns}
-        storageKey="jobTableSizing"
-      />
+      <section className="data-section">
+        <TableGrid
+          title="Backup Jobs"
+          endpoint="demo/table/job_states/rows"
+          columns={jobColumns}
+          storageKey="jobTableSizing"
+        />
 
-      <TableGrid
-        title="Repository States"
-        endpoint="demo/table/repo_states/rows"
-        columns={repoColumns}
-        storageKey="repoTableSizing"
-      />
+        <TableGrid
+          title="Repository States"
+          endpoint="demo/table/repo_states/rows"
+          columns={repoColumns}
+          storageKey="repoTableSizing"
+        />
 
-      <div className="align-right">
-        <Link to="/" className={`link${pathname === "/" ? " active" : ""}`}>
-          Back
-        </Link>
-      </div>
-    </section>
+        <div className="align-right">
+          <Link to="/" className={`link${pathname === "/" ? " active" : ""}`}>
+            Back
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }

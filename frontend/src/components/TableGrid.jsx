@@ -6,7 +6,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { useApiData } from "../hooks/useApiData";
-import "../pages/Demo.css";
+import "./TableGrid.css";
 
 export default function TableGrid({ title, endpoint, columns, storageKey }) {
   const { data: info, error, loading } = useApiData(endpoint);
@@ -39,7 +39,7 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
 
   if (loading) {
     return (
-      <div className="card wide">
+      <div className="table-card">
         <p className="hero-subtitle">Thinking...</p>
       </div>
     );
@@ -47,7 +47,7 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
 
   if (error) {
     return (
-      <div className="card wide">
+      <div className="table-card">
         <div className="hero-subtitle" style={{ color: "red" }}>
           Error: {error}
         </div>
@@ -58,7 +58,7 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
   if (!info) return null;
 
   return (
-    <div className="card wide">
+    <div className="table-card">
       <div className="table-header">
         <p className="table-title">
           {title} - <code>{endpoint}</code>

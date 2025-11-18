@@ -66,9 +66,9 @@ export default function Home() {
         <div className="card mid wide">
           <p>
             This SaaS-style pet project is built as a modern full-stack solution
-            leveraging <strong>Python</strong> with <strong>FastAPI</strong> and{" "}
-            <strong>SQLite</strong> on the backend, paired with a
-            high-performance <strong>React + Vite</strong> frontend powered by{" "}
+            leveraging <strong>Python</strong> with <strong>FastAPI</strong> on
+            the backend, paired with a high-performance{" "}
+            <strong>React + Vite</strong> frontend powered by{" "}
             <strong>JavaScript</strong>.
           </p>
           <p>
