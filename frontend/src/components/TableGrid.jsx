@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -19,19 +19,60 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
     const saved = window.localStorage.getItem(storageKey);
     return saved ? JSON.parse(saved) : {};
   });
+  const [hasUserSizing, setHasUserSizing] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !!window.localStorage.getItem(storageKey);
+  });
+  const cardRef = useRef(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.localStorage.setItem(storageKey, JSON.stringify(columnSizing));
   }, [columnSizing, storageKey]);
 
+  useEffect(() => {
+    if (hasUserSizing) return;
+
+    const applyAutoSizing = () => {
+      const width = cardRef.current?.clientWidth ?? window.innerWidth ?? 900;
+      const base = Math.max(
+        60,
+        Math.floor((width - 48) / Math.max(columns.length, 1))
+      );
+
+      const sizing = columns.reduce((acc, col, idx) => {
+        const key =
+          col.accessorKey ??
+          col.id ??
+          (typeof col.header === "string" ? col.header : `col-${idx}`);
+        acc[key] = base;
+        return acc;
+      }, {});
+
+      setColumnSizing((prev) => {
+        const sameKeys =
+          Object.keys(prev).length === Object.keys(sizing).length &&
+          Object.keys(sizing).every((key) => prev[key] === sizing[key]);
+        return sameKeys ? prev : sizing;
+      });
+    };
+
+    applyAutoSizing();
+    window.addEventListener("resize", applyAutoSizing);
+    return () => window.removeEventListener("resize", applyAutoSizing);
+  }, [columns, hasUserSizing]);
+
   const table = useReactTable({
     data: rows,
     columns,
     state: { sorting, columnVisibility, columnSizing },
+    defaultColumn: { minSize: 6, size: 48, maxSize: 400 },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    onColumnSizingChange: setColumnSizing,
+    onColumnSizingChange: (updater) => {
+      setHasUserSizing(true);
+      setColumnSizing(updater);
+    },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     columnResizeMode: "onChange",
@@ -58,7 +99,7 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
   if (!info) return null;
 
   return (
-    <div className="table-card">
+    <div className="table-card" ref={cardRef}>
       <div className="table-header">
         <p className="table-title">
           {title} - <code>{endpoint}</code>
@@ -86,7 +127,7 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
         </div>
       </div>
 
-      <div>
+      <div className="table-scroll">
         <table className="data-table">
           <thead>
             {table.getHeaderGroups().map((hg) => (
@@ -143,15 +184,33 @@ export default function TableGrid({ title, endpoint, columns, storageKey }) {
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="td"
-                    style={{ width: cell.column.getSize() }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const value = cell.getValue();
+                  const isNumber = typeof value === "number";
+                  const isEllipsable =
+                    typeof value === "string" || typeof value === "number";
+
+                  const rendered = flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  );
+
+                  return (
+                    <td
+                      key={cell.id}
+                      className={`td${isNumber ? " td-num" : ""}`}
+                      style={{ width: cell.column.getSize() }}
+                    >
+                      {isEllipsable ? (
+                        <span className="cell-ellipsis" title={String(value)}>
+                          {rendered}
+                        </span>
+                      ) : (
+                        rendered
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>

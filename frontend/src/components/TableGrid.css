@@ -65,6 +65,16 @@ th, td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   font-size: 14px;
   padding: 10px 12px;
   border-bottom: 1px solid #333338;
+  text-align: left;
+}
+
+.td-num { text-align: right; }
+
+.cell-ellipsis {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Zebra + hover */
