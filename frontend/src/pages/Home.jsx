@@ -11,9 +11,9 @@ export default function Home() {
     },
     {
       title: "On-Premises Solution",
-      text: "Monitor your infrastructure with our on-premises solution for maximum control and security.",
+      text: "Monitor your infrastructure with on-premises solution for maximum control and security.",
       link: "https://github.com/RkeyQQ/PetProject",
-      linkText: "Download (Github)",
+      linkText: "Download (GitHub)",
       external: true,
     },
     {
@@ -66,9 +66,9 @@ export default function Home() {
         <div className="card mid wide">
           <p>
             This SaaS-style pet project is built as a modern full-stack solution
-            leveraging <strong>Python</strong> with <strong>FastAPI</strong> and{" "}
-            <strong>SQLite</strong> on the backend, paired with a
-            high-performance <strong>React + Vite</strong> frontend powered by{" "}
+            leveraging <strong>Python</strong> with <strong>FastAPI</strong> on
+            the backend, paired with a high-performance{" "}
+            <strong>React + Vite</strong> frontend powered by{" "}
             <strong>JavaScript</strong>.
           </p>
           <p>

@@ -11,7 +11,7 @@ export default function SelfCheck() {
       <p className="hero-subtitle">
         Backend API check → <code>/api/db/ping</code>
       </p>
-      {loading && <p className="hero-subtitle">Loading…</p>}
+      {loading && <p className="hero-subtitle">Thinking…</p>}
       {error && <div className="hero-subtitle">Error: {error}</div>}
       {info && (
         <div className="card wide">
