@@ -31,8 +31,8 @@ export default function Demo() {
   const widgets = [
     {
       type: "map",
-      title: "Global Coverage",
-      subtitle: "Monitored Backup Locations",
+      title: "Monitored Backup Locations",
+      subtitle: "Global Coverage",
     },
     { type: "placeholder", title: "Widget placeholder A" },
     { type: "placeholder", title: "Widget placeholder B" },
