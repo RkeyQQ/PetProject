@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Demo.css";
 import TableGrid from "../components/TableGrid";
+import MapCard from "../components/MapCard";
 
 const jobColumns = [
   { header: "Last Result", accessorKey: "last_result" },
@@ -27,6 +28,21 @@ const repoColumns = [
 export default function Demo() {
   const { pathname } = useLocation();
 
+  const widgets = [
+    {
+      type: "map",
+      title: "Global Coverage",
+      subtitle: "Monitored Backup Locations",
+    },
+    { type: "placeholder", title: "Widget placeholder A" },
+    { type: "placeholder", title: "Widget placeholder B" },
+  ];
+  const widgetsRow2 = [
+    { type: "placeholder", title: "Widget placeholder C" },
+    { type: "placeholder", title: "Widget placeholder D" },
+    { type: "placeholder", title: "Widget placeholder E" },
+  ];
+
   return (
     <div className="demo">
       <section className="title-section">
@@ -34,6 +50,33 @@ export default function Demo() {
       </section>
 
       <section className="data-section">
+        <div className="widgets-row">
+          {widgets.map((widget, idx) => {
+            if (widget.type === "map") {
+              return (
+                <MapCard
+                  key={idx}
+                  title={widget.title}
+                  subtitle={widget.subtitle}
+                />
+              );
+            }
+
+            return (
+              <div key={idx} className="table-card widget-card">
+                <p className="table-title">{widget.title}</p>
+              </div>
+            );
+          })}
+        </div>
+        <div className="widgets-row">
+          {widgetsRow2.map((widget, idx) => (
+            <div key={idx} className="table-card widget-card">
+              <p className="table-title">{widget.title}</p>
+            </div>
+          ))}
+        </div>
+
         <TableGrid
           title="Backup Jobs"
           endpoint="demo/table/job_states/rows"
