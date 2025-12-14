@@ -108,6 +108,11 @@ export default function BarChart({
               </div>
             ))}
           </div>
+
+          <div className="bar-chart__legend" aria-hidden="true">
+            <span className="legend-pill legend-pill--success">SLA Met</span>
+            <span className="legend-pill legend-pill--error">SLA Breached</span>
+          </div>
         </div>
       </div>
 

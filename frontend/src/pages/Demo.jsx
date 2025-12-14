@@ -4,6 +4,7 @@ import TableGrid from "../components/TableGrid";
 import MapCard from "../components/MapCard";
 import TileCard from "../components/TileCard";
 import BarChart from "../components/BarChart";
+import StackedBarChart from "../components/StackedBarChart";
 
 const jobColumns = [
   { header: "Last Result", accessorKey: "last_result" },
@@ -69,7 +70,22 @@ export default function Demo() {
       linkText: "View report...",
       linkHref: "",
     },
-    { type: "placeholder", title: "Widget placeholder D" },
+    {
+      type: "stacked-bar",
+      title: "Backup Job State",
+      subtitle: "Last 7 Days",
+      data: [
+        [10, 0, 0],
+        [10, 4, 1],
+        [13, 0, 1],
+        [10, 3, 0],
+        [15, 3, 2],
+        [8, 2, 0],
+        [8, 0, 2],
+      ],
+      linkText: "View report...",
+      linkHref: "",
+    },
     { type: "placeholder", title: "Widget placeholder E" },
   ];
 
@@ -125,6 +141,19 @@ export default function Demo() {
                   subtitle={widget.subtitle}
                   data={widget.data}
                   threshold={widget.threshold}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
+                />
+              );
+            }
+
+            if (widget.type === "stacked-bar") {
+              return (
+                <StackedBarChart
+                  key={idx}
+                  title={widget.title}
+                  subtitle={widget.subtitle}
+                  data={widget.data}
                   linkText={widget.linkText}
                   linkHref={widget.linkHref}
                 />
