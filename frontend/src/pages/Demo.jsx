@@ -59,8 +59,6 @@ export default function Demo() {
       title: "Monitored Backup Locations",
       subtitle: "Global Coverage",
     },
-  ];
-  const widgetsRow2 = [
     {
       type: "bar",
       title: "Backup SLA",
@@ -86,7 +84,6 @@ export default function Demo() {
       linkText: "View report...",
       linkHref: "",
     },
-    { type: "placeholder", title: "Widget placeholder E" },
   ];
 
   return (
@@ -96,7 +93,7 @@ export default function Demo() {
       </section>
 
       <section className="data-section">
-        <div className="widgets-row">
+        <div className="widgets-grid">
           {widgets.map((widget, idx) => {
             if (widget.type === "map") {
               return (
@@ -124,15 +121,6 @@ export default function Demo() {
               );
             }
 
-            return (
-              <div key={idx} className="table-card widget-card">
-                <p className="table-title">{widget.title}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div className="widgets-row">
-          {widgetsRow2.map((widget, idx) => {
             if (widget.type === "bar") {
               return (
                 <BarChart

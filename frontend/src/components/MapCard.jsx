@@ -9,6 +9,12 @@ const TILE_URL =
 const TILE_ATTRIB =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors';
 
+const computeZoomForHeight = (height) => {
+  if (!height) return 2.5;
+  const base = Math.log2(height / 256) + 0.6;
+  return Math.min(5, Math.max(2, base));
+};
+
 function loadLeaflet() {
   if (typeof window === "undefined") return Promise.reject();
   if (window.L) return Promise.resolve(window.L);
@@ -38,6 +44,7 @@ function loadLeaflet() {
 
 export default function MapCard({ title, subtitle }) {
   const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
@@ -58,12 +65,16 @@ export default function MapCard({ title, subtitle }) {
         tileLayer = L.tileLayer(TILE_URL, {
           attribution: TILE_ATTRIB,
           maxZoom: 5,
-          minZoom: 1,
+          minZoom: 2,
           noWrap: false,
         });
 
         tileLayer.addTo(mapInstance);
-        mapInstance.setView([25, 0], 1);
+        const initialZoom = computeZoomForHeight(
+          mapRef.current?.clientHeight || 0
+        );
+        mapInstance.setMinZoom(Math.floor(initialZoom));
+        mapInstance.setView([20, 0], initialZoom);
 
         const pins = [
           { coords: [37.77, -122.4], color: "#59ba57", radius: 5 },
@@ -82,17 +93,50 @@ export default function MapCard({ title, subtitle }) {
           }).addTo(mapInstance)
         );
 
+        mapInstanceRef.current = mapInstance;
         setMapReady(true);
       })
       .catch(() => setMapReady(false));
 
     return () => {
       markers.forEach((m) => m.remove());
-      if (mapInstance) {
-        mapInstance.remove();
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!mapReady || !mapRef.current || !mapInstanceRef.current) return;
+
+    const instance = mapInstanceRef.current;
+    const resizeMap = () => {
+      const targetZoom = computeZoomForHeight(mapRef.current.clientHeight);
+      instance.setMinZoom(Math.floor(targetZoom));
+      if (instance.getZoom() < targetZoom - 0.05) {
+        instance.setZoom(targetZoom);
+      }
+      instance.invalidateSize();
+    };
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(resizeMap)
+        : null;
+
+    if (observer) {
+      observer.observe(mapRef.current);
+    }
+
+    const timeout = setTimeout(resizeMap, 50);
+    resizeMap();
+
+    return () => {
+      clearTimeout(timeout);
+      if (observer) observer.disconnect();
+    };
+  }, [mapReady]);
 
   return (
     <div className="table-card map-card">
