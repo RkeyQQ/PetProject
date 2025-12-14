@@ -3,6 +3,7 @@ import "./Demo.css";
 import TableGrid from "../components/TableGrid";
 import MapCard from "../components/MapCard";
 import TileCard from "../components/TileCard";
+import BarChart from "../components/BarChart";
 
 const jobColumns = [
   { header: "Last Result", accessorKey: "last_result" },
@@ -33,18 +34,18 @@ export default function Demo() {
     {
       type: "tile",
       title: "Backup Servers",
-      subtitle: "state",
+      subtitle: "State",
       value: 2,
       total: 1,
       trend: "down",
       metaText: "1 with error",
-      linkText: "More details...",
+      linkText: "View report...",
       linkHref: "",
     },
     {
       type: "tile",
       title: "Backup Jobs",
-      subtitle: "state",
+      subtitle: "State",
       value: 10,
       total: 8,
       trend: "up",
@@ -59,7 +60,15 @@ export default function Demo() {
     },
   ];
   const widgetsRow2 = [
-    { type: "placeholder", title: "Widget placeholder C" },
+    {
+      type: "bar",
+      title: "Backup SLA",
+      subtitle: "Last 7 Days",
+      data: [100, 95, 100, 92, 88, 100, 100],
+      threshold: 90,
+      linkText: "View report...",
+      linkHref: "",
+    },
     { type: "placeholder", title: "Widget placeholder D" },
     { type: "placeholder", title: "Widget placeholder E" },
   ];
@@ -107,11 +116,27 @@ export default function Demo() {
           })}
         </div>
         <div className="widgets-row">
-          {widgetsRow2.map((widget, idx) => (
-            <div key={idx} className="table-card widget-card">
-              <p className="table-title">{widget.title}</p>
-            </div>
-          ))}
+          {widgetsRow2.map((widget, idx) => {
+            if (widget.type === "bar") {
+              return (
+                <BarChart
+                  key={idx}
+                  title={widget.title}
+                  subtitle={widget.subtitle}
+                  data={widget.data}
+                  threshold={widget.threshold}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
+                />
+              );
+            }
+
+            return (
+              <div key={idx} className="table-card widget-card">
+                <p className="table-title">{widget.title}</p>
+              </div>
+            );
+          })}
         </div>
 
         <TableGrid
