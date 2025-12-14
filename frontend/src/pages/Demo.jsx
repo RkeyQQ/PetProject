@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import "./Demo.css";
 import TableGrid from "../components/TableGrid";
 import MapCard from "../components/MapCard";
+import TileCard from "../components/TileCard";
 
 const jobColumns = [
   { header: "Last Result", accessorKey: "last_result" },
@@ -30,12 +31,32 @@ export default function Demo() {
 
   const widgets = [
     {
+      type: "tile",
+      title: "Backup Servers",
+      subtitle: "state",
+      value: 2,
+      total: 1,
+      trend: "down",
+      metaText: "1 with error",
+      linkText: "More details...",
+      linkHref: "",
+    },
+    {
+      type: "tile",
+      title: "Backup Jobs",
+      subtitle: "state",
+      value: 10,
+      total: 8,
+      trend: "up",
+      metaText: "2 with error",
+      linkText: "View report...",
+      linkHref: "",
+    },
+    {
       type: "map",
       title: "Monitored Backup Locations",
       subtitle: "Global Coverage",
     },
-    { type: "placeholder", title: "Widget placeholder A" },
-    { type: "placeholder", title: "Widget placeholder B" },
   ];
   const widgetsRow2 = [
     { type: "placeholder", title: "Widget placeholder C" },
@@ -58,6 +79,22 @@ export default function Demo() {
                   key={idx}
                   title={widget.title}
                   subtitle={widget.subtitle}
+                />
+              );
+            }
+
+            if (widget.type === "tile") {
+              return (
+                <TileCard
+                  key={idx}
+                  title={widget.title}
+                  value={widget.value}
+                  total={widget.total}
+                  subtitle={widget.subtitle}
+                  trend={widget.trend}
+                  metaText={widget.metaText}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
                 />
               );
             }

@@ -21,7 +21,7 @@
   background: #2F2F31ff;    
   color: #f6f7f6ff;
   overflow: hidden;
-  padding: 20px 12px;  
+  padding: 8px 8px;  
   text-align: center;
   min-height: 0;
 }
@@ -38,8 +38,8 @@
 .widgets-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 12px;
-  margin: 8px 0 14px;
+  gap: 16px;
+  margin: 0 0 16px 0;
 }
 
 .widgets-row .table-card {
