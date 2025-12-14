@@ -6,10 +6,10 @@
   border: 1px solid #59ba57ff;
   border-radius: 12px;
   padding: 20px;
-  margin: 20px 0;
+  margin: 0 0 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
 .table-header {

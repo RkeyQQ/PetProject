@@ -1,0 +1,238 @@
+.stacked-bar-card {
+  padding: 0;
+  gap: 0;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stacked-bar-card .bar-card__header,
+.stacked-bar-card .bar-card__footer {
+  display: flex;
+  align-items: center;
+  min-height: 16px;
+  padding: 16px 18px;
+}
+
+.stacked-bar-card .table-header {
+  width: 100%;
+}
+
+.stacked-bar-card .bar-card__subtitle {
+  color: #d4d7d4ff;
+}
+
+.stacked-bar-card .bar-card__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.stacked-bar-chart {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stacked-bar-chart__plot {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: stretch;
+  gap: 12px;
+  min-height: 200px;
+}
+
+.stacked-bar-chart__y-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  color: #d4d7d4ff;
+  padding: 8px 0;
+}
+
+.stacked-bar-chart__y-label {
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.stacked-bar-chart__canvas {
+  position: relative;
+  border: 1px solid #77777bff;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #2f2f31 0%, #262629 100%);
+  overflow: hidden;
+}
+
+.stacked-bar-chart__grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #333338;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.stacked-bar-chart__bars {
+  position: absolute;
+  inset: 14px 12px 12px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: end;
+  gap: 12px;
+  z-index: 2;
+}
+
+.stacked-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  height: 100%;
+  position: relative;
+  padding-top: 14px;
+}
+
+.stacked-bar__track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  overflow: visible;
+}
+
+.stacked-bar__stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+}
+
+.stacked-bar__segment {
+  width: 100%;
+  border-radius: 0;
+  transition: height 0.25s ease;
+}
+
+.stacked-bar__segment--success {
+  background: #59ba57ff;
+}
+
+.stacked-bar__segment--warning {
+  background: #d6b04a;
+}
+
+.stacked-bar__segment--error {
+  background: #e05b5bff;
+}
+
+.stacked-bar__segment--top {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.stacked-bar__segment--bottom {
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.stacked-bar__value {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1;
+  color: #f6f7f6ff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.stacked-bar-chart__x-axis {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: #d4d7d4ff;
+  margin: 0 12px 0 64px;
+}
+
+.stacked-bar-chart__tick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stacked-bar-chart__dot {
+  width: 8px;
+  height: 8px;
+  background: #b7b7b7;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.stacked-bar-chart__tick-label {
+  line-height: 1.2;
+}
+
+.stacked-bar-chart__legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #d4d7d4ff;
+}
+
+.legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #2f2f31;
+  border: 1px solid #3a3a3f;
+}
+
+.legend-pill::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-pill--success::before {
+  background: #59ba57ff;
+}
+
+.legend-pill--warning::before {
+  background: #d6b04a;
+}
+
+.legend-pill--error::before {
+  background: #e05b5bff;
+}
+
+.stacked-bar-card .bar-chart__link {
+  color: #59ba57ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.stacked-bar-card .bar-chart__link:hover {
+  color: #85d383ff;
+  text-decoration: underline;
+}

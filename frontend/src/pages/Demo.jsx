@@ -2,6 +2,9 @@ import { Link, useLocation } from "react-router-dom";
 import "./Demo.css";
 import TableGrid from "../components/TableGrid";
 import MapCard from "../components/MapCard";
+import TileCard from "../components/TileCard";
+import BarChart from "../components/BarChart";
+import StackedBarChart from "../components/StackedBarChart";
 
 const jobColumns = [
   { header: "Last Result", accessorKey: "last_result" },
@@ -30,17 +33,57 @@ export default function Demo() {
 
   const widgets = [
     {
+      type: "tile",
+      title: "Backup Servers",
+      subtitle: "State",
+      value: 2,
+      total: 1,
+      trend: "down",
+      metaText: "1 with error",
+      linkText: "View report...",
+      linkHref: "",
+    },
+    {
+      type: "tile",
+      title: "Backup Jobs",
+      subtitle: "State",
+      value: 10,
+      total: 8,
+      trend: "up",
+      metaText: "2 with error",
+      linkText: "View report...",
+      linkHref: "",
+    },
+    {
       type: "map",
       title: "Monitored Backup Locations",
       subtitle: "Global Coverage",
     },
-    { type: "placeholder", title: "Widget placeholder A" },
-    { type: "placeholder", title: "Widget placeholder B" },
-  ];
-  const widgetsRow2 = [
-    { type: "placeholder", title: "Widget placeholder C" },
-    { type: "placeholder", title: "Widget placeholder D" },
-    { type: "placeholder", title: "Widget placeholder E" },
+    {
+      type: "bar",
+      title: "Backup SLA",
+      subtitle: "Last 7 Days",
+      data: [100, 95, 100, 92, 88, 100, 100],
+      threshold: 90,
+      linkText: "View report...",
+      linkHref: "",
+    },
+    {
+      type: "stacked-bar",
+      title: "Backup Job State",
+      subtitle: "Last 7 Days",
+      data: [
+        [10, 0, 0],
+        [10, 4, 1],
+        [13, 0, 1],
+        [10, 3, 0],
+        [15, 3, 2],
+        [8, 2, 0],
+        [8, 0, 2],
+      ],
+      linkText: "View report...",
+      linkHref: "",
+    },
   ];
 
   return (
@@ -50,7 +93,7 @@ export default function Demo() {
       </section>
 
       <section className="data-section">
-        <div className="widgets-row">
+        <div className="widgets-grid">
           {widgets.map((widget, idx) => {
             if (widget.type === "map") {
               return (
@@ -62,19 +105,55 @@ export default function Demo() {
               );
             }
 
+            if (widget.type === "tile") {
+              return (
+                <TileCard
+                  key={idx}
+                  title={widget.title}
+                  value={widget.value}
+                  total={widget.total}
+                  subtitle={widget.subtitle}
+                  trend={widget.trend}
+                  metaText={widget.metaText}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
+                />
+              );
+            }
+
+            if (widget.type === "bar") {
+              return (
+                <BarChart
+                  key={idx}
+                  title={widget.title}
+                  subtitle={widget.subtitle}
+                  data={widget.data}
+                  threshold={widget.threshold}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
+                />
+              );
+            }
+
+            if (widget.type === "stacked-bar") {
+              return (
+                <StackedBarChart
+                  key={idx}
+                  title={widget.title}
+                  subtitle={widget.subtitle}
+                  data={widget.data}
+                  linkText={widget.linkText}
+                  linkHref={widget.linkHref}
+                />
+              );
+            }
+
             return (
               <div key={idx} className="table-card widget-card">
                 <p className="table-title">{widget.title}</p>
               </div>
             );
           })}
-        </div>
-        <div className="widgets-row">
-          {widgetsRow2.map((widget, idx) => (
-            <div key={idx} className="table-card widget-card">
-              <p className="table-title">{widget.title}</p>
-            </div>
-          ))}
         </div>
 
         <TableGrid
