@@ -32,13 +32,17 @@ request_times = []
 
 class Message(BaseModel):
     """Single message in conversation."""
+
     role: str = Field(..., description="'user' or 'assistant'")
     content: str = Field(..., description="Message text")
 
 
 class ChatRequest(BaseModel):
     """Chat API request."""
-    message: str = Field(..., min_length=1, max_length=500, description="User's question")
+
+    message: str = Field(
+        ..., min_length=1, max_length=500, description="User's question"
+    )
     history: Optional[list[Message]] = Field(
         default=None, description="Conversation history for context"
     )
@@ -46,8 +50,11 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     """Chat API response."""
+
     reply: str = Field(..., description="Assistant's response")
-    meta: dict = Field(default_factory=dict, description="Metadata (tokens, model, etc.)")
+    meta: dict = Field(
+        default_factory=dict, description="Metadata (tokens, model, etc.)"
+    )
 
 
 # Enhanced system prompt with detailed schema and examples
@@ -134,13 +141,13 @@ def check_rate_limit() -> bool:
     """Check if request is within rate limit (Free tier protection)."""
     global request_times
     now = time.time()
-    
+
     # Remove old requests outside the window
     request_times = [t for t in request_times if now - t < RATE_LIMIT_WINDOW]
-    
+
     if len(request_times) >= RATE_LIMIT_REQUESTS:
         return False
-    
+
     request_times.append(now)
     return True
 
@@ -152,22 +159,32 @@ def validate_sql_query(sql_query: str) -> tuple[bool, Optional[str]]:
     """
     if not sql_query:
         return False, "SQL query is empty"
-    
+
     sql_upper = sql_query.strip().upper()
-    
+
     # Only SELECT allowed
     if not sql_upper.startswith("SELECT"):
         return False, "Only SELECT queries are allowed"
-    
+
     # Block dangerous operations
-    dangerous_keywords = ["INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "CREATE", "TRUNCATE", "EXEC", "UNION"]
+    dangerous_keywords = [
+        "INSERT",
+        "UPDATE",
+        "DELETE",
+        "DROP",
+        "ALTER",
+        "CREATE",
+        "TRUNCATE",
+        "EXEC",
+        "UNION",
+    ]
     if any(kw in sql_upper for kw in dangerous_keywords):
         return False, f"Query contains forbidden operations"
-    
+
     # Check for comment injection
     if "--" in sql_query or "/*" in sql_query:
         return False, "SQL comments are not allowed"
-    
+
     return True, None
 
 
@@ -184,16 +201,16 @@ def execute_data_query(sql_query: str) -> dict:
             "success": False,
             "error": error_msg,
         }
-    
+
     try:
         with get_conn() as conn:
             cursor = conn.cursor()
             cursor.execute(sql_query)
             rows = cursor.fetchall()
-            
+
             # Convert to list of dicts
             results = [dict(row) for row in rows]
-            
+
             return {
                 "success": True,
                 "data": results,
@@ -248,6 +265,7 @@ def format_query_results_for_user(query_result: dict) -> str:
 
 def retry_api_call(max_retries: int = 3) -> callable:
     """Decorator for retrying API calls with exponential backoff."""
+
     def decorator(func):
         async def wrapper(*args, **kwargs):
             for attempt in range(max_retries):
@@ -255,8 +273,10 @@ def retry_api_call(max_retries: int = 3) -> callable:
                     return await func(*args, **kwargs)
                 except RateLimitError as e:
                     if attempt < max_retries - 1:
-                        wait_time = (2 ** attempt) + 1  # Exponential backoff
-                        logger.warning(f"Rate limited. Retrying in {wait_time}s... (attempt {attempt + 1}/{max_retries})")
+                        wait_time = (2**attempt) + 1  # Exponential backoff
+                        logger.warning(
+                            f"Rate limited. Retrying in {wait_time}s... (attempt {attempt + 1}/{max_retries})"
+                        )
                         time.sleep(wait_time)
                     else:
                         raise
@@ -268,7 +288,9 @@ def retry_api_call(max_retries: int = 3) -> callable:
                         )
                     raise
             return None
+
         return wrapper
+
     return decorator
 
 
@@ -284,7 +306,7 @@ async def chat_ask(request: ChatRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="OpenAI API key not configured. Set OPENAI_API_KEY environment variable.",
         )
-    
+
     # Rate limiting for Free tier
     if not check_rate_limit():
         raise HTTPException(
@@ -295,22 +317,22 @@ async def chat_ask(request: ChatRequest):
     try:
         # Build conversation history
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-        
+
         if request.history:
             for msg in request.history:
                 messages.append({"role": msg.role, "content": msg.content})
-        
+
         # Add current user message
         messages.append({"role": "user", "content": request.message})
 
         # Call OpenAI API to get query decision
         logger.info(f"User message: {request.message}")
-        
+
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # Use cheaper model for free tier
             messages=messages,
             temperature=0.2,  # Lower temperature for more consistent responses
-            max_tokens=300,   # Limit tokens to reduce costs
+            max_tokens=300,  # Limit tokens to reduce costs
             timeout=30,
         )
 
@@ -336,24 +358,26 @@ async def chat_ask(request: ChatRequest):
         if needs_query and sql_query:
             logger.info(f"Executing SQL: {sql_query}")
             query_result = execute_data_query(sql_query)
-            
+
             if query_result.get("success"):
                 # Format results
                 formatted_data = format_query_results_for_user(query_result)
-                
+
                 # Ask LLM to provide final answer based on data
                 messages.append({"role": "assistant", "content": assistant_text})
-                messages.append({
-                    "role": "user",
-                    "content": f"""Based on this data from the database:
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": f"""Based on this data from the database:
 
 {formatted_data}
 
 Please answer the user's original question: "{request.message}"
 
-Answer concisely and naturally. Respond in the same language as the original question."""
-                })
-                
+Answer concisely and naturally. Respond in the same language as the original question.""",
+                    }
+                )
+
                 # Get final response from LLM
                 final_response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
@@ -385,7 +409,7 @@ Answer concisely and naturally. Respond in the same language as the original que
         )
     except APIError as e:
         error_msg = str(e).lower()
-        
+
         if "free trial" in error_msg or "quota" in error_msg or "exceeded" in error_msg:
             logger.error("OpenAI Free trial limit exceeded")
             raise HTTPException(

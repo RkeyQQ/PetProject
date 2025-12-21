@@ -87,9 +87,9 @@ export default function useChat() {
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           const errorMessage = errorData.detail || `HTTP ${response.status}`;
-          
+
           console.error(`API Error ${response.status}:`, errorMessage);
-          
+
           // Add error message to chat (show API error as-is)
           setMessages((prev) => [
             ...prev,
@@ -103,7 +103,7 @@ export default function useChat() {
         }
 
         const data = await response.json();
-        
+
         if (!data.reply) {
           throw new Error("Empty response from API");
         }
@@ -131,7 +131,7 @@ export default function useChat() {
 
         const errorMsg = err.message || "Failed to send message";
         console.error("Chat error:", err);
-        
+
         setMessages((prev) => [
           ...prev,
           {
