@@ -88,7 +88,7 @@ export default function Home() {
           </p>
           <p>
             <em>
-              #Python #FastAPI #React #Vite #JavaScript #Docker #GoogleCloud
+              #AI #Python #FastAPI #React #Vite #JavaScript #Docker #GoogleCloud
               #CloudRun #FirebaseHosting #CI/CD #GitHubActions #Fullstack #SaaS
               #IndieDev
             </em>
