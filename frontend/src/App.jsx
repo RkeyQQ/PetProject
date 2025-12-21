@@ -1,4 +1,7 @@
+import React, { Suspense, lazy } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+
+const ChatWidget = lazy(() => import("./components/ChatWidget"));
 
 export default function App() {
   const { pathname } = useLocation();
@@ -47,6 +50,10 @@ export default function App() {
           Roman Key
         </a>
       </footer>
+
+      <Suspense fallback={null}>
+        <ChatWidget />
+      </Suspense>
     </div>
   );
 }

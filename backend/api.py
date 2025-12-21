@@ -1,7 +1,14 @@
+import os
+from dotenv import load_dotenv
+
+# Load .env.local FIRST before any other imports
+load_dotenv(".env.local")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.routers import demo
 from backend.routers import dbutils
+from backend.routers import chat
 
 app = FastAPI(title="Monitoring Hub API", openapi_url="/api/openapi.json")
 
@@ -22,3 +29,4 @@ def status():
 
 app.include_router(demo.router, prefix="/api/demo", tags=["Data For Demo"])
 app.include_router(dbutils.router, prefix="/api/db", tags=["Database Utilities"])
+app.include_router(chat.router, prefix="/api/chat", tags=["Chat AI"])
