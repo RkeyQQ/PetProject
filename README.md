@@ -1,13 +1,13 @@
 # Monitoring Hub
 
-Monitoring Hub is a full-stack demo that showcases how to collect Veeam Backup & Replication (VBR) metrics, persist them in SQLite, and surface the data through a FastAPI backend and a React single-page application. It is packaged for local development and containerized deployment to Google Cloud Run + Firebase Hosting.
+Monitoring Hub is a full-stack demo that showcases how to collect Veeam Backup & Replication (VBR) metrics, persist them in a database, and surface the data through a FastAPI backend and a React single-page application. It is packaged for local development and containerized deployment to Google Cloud Run + Firebase Hosting.
 
 ## Features
 
-- **Scheduled collector** (`main.py`) that authenticates against the VBR REST API, retrieves repository/job state snapshots, and stores both raw and processed records in SQLite.
+- **Collector** (`main.py`) that authenticates against the VBR REST API, retrieves repository/job state snapshots, and stores both raw and processed records in the database.
 - **FastAPI backend** (`backend/`) that exposes health/self-check endpoints and read-only demo APIs for browsing the captured snapshots.
 - **React + Vite frontend** (`frontend/`) that renders a marketing-style landing page, a self-check status view, and an interactive TanStack Table demo backed by the API.
-- **Docker-first deployment** with a slim Python image and GitHub Actions friendly layout.
+- **Docker-first deployment** with a slim Python image and GitHub Actions-friendly layout.
 
 ## Architecture
 
