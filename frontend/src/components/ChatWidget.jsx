@@ -56,20 +56,20 @@ export default function ChatWidget() {
         <div className="chat-body">
           {messages.length === 0 && (
             <div className="chat-placeholder">
-              Привет! Я ваш ассистент по резервным копиям. 🤖
+              Hello! I'm your AI assistant 🤖
               <br />
               <br />
-              Задавайте мне вопросы о:
+              You may ask me about:
               <br />
-              • Работе backup jobs
+              • backup jobs
               <br />
-              • Состоянии репозиториев
+              • repository status
               <br />
-              • Свободном месте
+              • free space
               <br />
               <br />
               <small style={{ opacity: 0.7 }}>
-                Ask in any language / Спрашивайте на любом языке
+                Ask in any language you like!
               </small>
             </div>
           )}
@@ -81,9 +81,7 @@ export default function ChatWidget() {
                 msg.isError ? " chat-message--error" : ""
               }`}
             >
-              <div className="chat-message-content">
-                {msg.content}
-              </div>
+              <div className="chat-message-content">{msg.content}</div>
             </div>
           ))}
 
@@ -99,9 +97,7 @@ export default function ChatWidget() {
 
           {error && !loading && (
             <div className="chat-message chat-message--error">
-              <div className="chat-message-content">
-                {error}
-              </div>
+              <div className="chat-message-content">{error}</div>
             </div>
           )}
 
@@ -111,7 +107,7 @@ export default function ChatWidget() {
         <div className="chat-footer">
           <input
             className="chat-input"
-            placeholder="Ваш вопрос / Your question..."
+            placeholder="Your question..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}

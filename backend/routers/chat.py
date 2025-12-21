@@ -2,6 +2,10 @@
 Chat API router with OpenAI integration for natural language queries over backup data.
 Handles multilingual questions and generates SQL queries to answer them.
 Optimized for Free tier OpenAI usage with proper error handling and rate limiting.
+
+Configuration:
+  - Local Development: OPENAI_API_KEY from .env.local
+  - GCP Production: OPENAI_API_KEY from GCP Secret Manager (requires GOOGLE_CLOUD_PROJECT env var)
 """
 
 import json
@@ -16,13 +20,26 @@ from pydantic import BaseModel, Field
 from openai import OpenAI, APIError, RateLimitError
 
 from backend.db_context import get_conn
+from backend.secrets import get_openai_api_key
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Initialize OpenAI client
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+# ========== CONFIGURATION ==========
+# LOCAL DEVELOPMENT: Set OPENAI_API_KEY in .env.local
+#   OPENAI_API_KEY=sk-proj-your-actual-key-here
+#
+# GCP PRODUCTION:
+#   1. Set GOOGLE_CLOUD_PROJECT environment variable
+#   2. Create secret: gcloud secrets create openai-api-key --data-file=-
+#   3. The get_openai_api_key() function will automatically use it
+try:
+    OPENAI_API_KEY = get_openai_api_key()
+    client = OpenAI(api_key=OPENAI_API_KEY)
+except ValueError as e:
+    logger.error(f"Failed to initialize OpenAI client: {e}")
+    client = None
 
 # Rate limiting
 RATE_LIMIT_REQUESTS = 3
