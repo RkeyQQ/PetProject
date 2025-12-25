@@ -6,6 +6,8 @@
   align-items: stretch;
   text-align: left;
   min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .title-section {
@@ -24,6 +26,7 @@
   padding: 8px 8px;  
   text-align: center;
   min-height: 0;
+  min-width: 0;
 }
 
 .dashboard-title {  
