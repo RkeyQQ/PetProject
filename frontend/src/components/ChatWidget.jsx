@@ -5,17 +5,25 @@ import "./ChatWidget.css";
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const { messages, loading, error, sendMessage, clearHistory } = useChat();
+  const {
+    messages,
+    loading,
+    error,
+    sendMessage,
+    clearHistory,
+    cooldownRemaining,
+  } = useChat();
+  const cooldownActive = cooldownRemaining > 0;
 
   const handleSend = () => {
-    if (inputValue.trim() && !loading) {
+    if (inputValue.trim() && !loading && !cooldownActive) {
       sendMessage(inputValue);
       setInputValue("");
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey && !loading) {
+    if (e.key === "Enter" && !e.shiftKey && !loading && !cooldownActive) {
       e.preventDefault();
       handleSend();
     }
@@ -111,15 +119,19 @@ export default function ChatWidget() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            disabled={loading}
+            disabled={loading || cooldownActive}
           />
           <button
             className="chat-send"
             onClick={handleSend}
-            disabled={loading || !inputValue.trim()}
+            disabled={loading || cooldownActive || !inputValue.trim()}
             aria-label="Send message"
           >
-            {loading ? "..." : "➤"}
+            {loading
+              ? "..."
+              : cooldownActive
+              ? `${cooldownRemaining}s`
+              : "Send"}
           </button>
         </div>
       </div>

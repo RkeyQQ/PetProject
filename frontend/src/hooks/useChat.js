@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
+const COOLDOWN_SECONDS = 15;
+
 /**
  * useChat hook for managing chat state and API communication.
  * Handles message history, sending questions, and local caching.
@@ -9,6 +11,8 @@ export default function useChat() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
   const abortControllerRef = useRef(null);
   const storageKey = "chatHistory";
 
@@ -33,12 +37,44 @@ export default function useChat() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (!cooldownUntil) return undefined;
+
+    const updateRemaining = () => {
+      const remainingMs = cooldownUntil - Date.now();
+      const remainingSeconds = Math.max(0, Math.ceil(remainingMs / 1000));
+      setCooldownRemaining(remainingSeconds);
+
+      if (remainingSeconds === 0) {
+        setCooldownUntil(0);
+      }
+    };
+
+    updateRemaining();
+    const intervalId = setInterval(updateRemaining, 500);
+    return () => clearInterval(intervalId);
+  }, [cooldownUntil]);
+
   /**
    * Send a user message and get a response from the chat API.
    */
   const sendMessage = useCallback(
     async (userMessage) => {
       if (!userMessage.trim()) return;
+
+      if (cooldownUntil && Date.now() < cooldownUntil) {
+        const remainingSeconds = Math.max(
+          1,
+          Math.ceil((cooldownUntil - Date.now()) / 1000)
+        );
+        setCooldownRemaining(remainingSeconds);
+        setError(`Please wait ${remainingSeconds}s before sending again.`);
+        return;
+      }
+
+      const nextCooldownUntil = Date.now() + COOLDOWN_SECONDS * 1000;
+      setCooldownUntil(nextCooldownUntil);
+      setCooldownRemaining(COOLDOWN_SECONDS);
 
       setError(null);
       setLoading(true);
@@ -146,7 +182,7 @@ export default function useChat() {
         setLoading(false);
       }
     },
-    [messages]
+    [messages, cooldownUntil]
   );
 
   /**
@@ -175,5 +211,6 @@ export default function useChat() {
     sendMessage,
     clearHistory,
     cancel,
+    cooldownRemaining,
   };
 }

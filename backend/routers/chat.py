@@ -346,10 +346,10 @@ async def chat_ask(request: ChatRequest):
         logger.info(f"User message: {request.message}")
 
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Use cheaper model for free tier
+            model="gpt-5-nano",  # Use cheaper model for free tier
             messages=messages,
             temperature=0.2,  # Lower temperature for more consistent responses
-            max_tokens=300,  # Limit tokens to reduce costs
+            max_tokens=200,  # Limit tokens to reduce costs
             timeout=30,
         )
 
@@ -397,10 +397,10 @@ Answer concisely and naturally. Respond in the same language as the original que
 
                 # Get final response from LLM
                 final_response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-5-nano",
                     messages=messages,
                     temperature=0.7,
-                    max_tokens=500,
+                    max_tokens=250,
                     timeout=30,
                 )
                 final_reply = final_response.choices[0].message.content.strip()
