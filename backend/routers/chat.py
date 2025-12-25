@@ -153,6 +153,11 @@ Columns:
 - If user question doesn't need database query, still return JSON: {"needs_query": false, "sql": null, "reasoning": "explanation"}
 """
 
+FINAL_RESPONSE_PROMPT = """You are a helpful assistant that answers questions about backup jobs and repositories.
+Use the provided data to respond concisely and naturally.
+Respond in the same language as the user's question.
+Do not return JSON, SQL, or any structured output unless explicitly asked."""
+
 
 def check_rate_limit() -> bool:
     """Check if request is within rate limit (Free tier protection)."""
@@ -381,8 +386,8 @@ async def chat_ask(request: ChatRequest):
                 formatted_data = format_query_results_for_user(query_result)
 
                 # Ask LLM to provide final answer based on data
-                messages.append({"role": "assistant", "content": assistant_text})
-                messages.append(
+                final_messages = [
+                    {"role": "system", "content": FINAL_RESPONSE_PROMPT},
                     {
                         "role": "user",
                         "content": f"""Based on this data from the database:
@@ -391,14 +396,14 @@ async def chat_ask(request: ChatRequest):
 
 Please answer the user's original question: "{request.message}"
 
-Answer concisely and naturally. Respond in the same language as the original question.""",
-                    }
-                )
+Answer concisely and naturally.""",
+                    },
+                ]
 
                 # Get final response from LLM
                 final_response = client.chat.completions.create(
                     model="gpt-5-nano",
-                    messages=messages,
+                    messages=final_messages,
                     temperature=0.7,
                     max_tokens=250,
                     timeout=30,

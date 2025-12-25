@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
-const COOLDOWN_SECONDS = 15;
+const COOLDOWN_SECONDS = 30;
 
 /**
  * useChat hook for managing chat state and API communication.
