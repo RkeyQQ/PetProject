@@ -25,9 +25,11 @@ from backend.secrets import get_openai_api_key
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+# LLM model to use
+LLM_MODEL = "gpt-4.1-nano"
+
 # Initialize OpenAI client
 # ========== CONFIGURATION ==========
-# LOCAL DEVELOPMENT: Set OPENAI_API_KEY in .env.local
 #   OPENAI_API_KEY=sk-proj-your-actual-key-here
 #
 # GCP PRODUCTION:
@@ -351,7 +353,7 @@ async def chat_ask(request: ChatRequest):
         logger.info(f"User message: {request.message}")
 
         response = client.chat.completions.create(
-            model="gpt-5-nano",  # Use cheaper model for free tier
+            model=LLM_MODEL,  # Use cheaper model for free tier
             messages=messages,
             temperature=0.2,  # Lower temperature for more consistent responses
             max_tokens=200,  # Limit tokens to reduce costs
@@ -402,7 +404,7 @@ Answer concisely and naturally.""",
 
                 # Get final response from LLM
                 final_response = client.chat.completions.create(
-                    model="gpt-5-nano",
+                    model=LLM_MODEL,
                     messages=final_messages,
                     temperature=0.7,
                     max_tokens=250,
