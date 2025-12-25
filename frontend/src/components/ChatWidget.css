@@ -213,6 +213,8 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
+  min-width: 50px;
+  text-align: center;
   transition: background 150ms ease, transform 100ms ease;
 }
 
