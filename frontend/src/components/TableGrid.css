@@ -2,6 +2,8 @@
 .table-card {
   box-sizing: border-box;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   background: #2f2f31ff;
   border: 1px solid #59ba57ff;
   border-radius: 12px;
@@ -28,13 +30,25 @@
   text-align: left;
 }
 
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
 /* Base */
 table { table-layout: fixed; }
 th, td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Table theme */
 .data-table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -159,5 +173,15 @@ th, td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .col-toggle input {
   margin-right: 6px;
   accent-color: #59ba57ff;
+}
+
+@media (max-width: 48rem) {
+  .table-scroll {
+    overflow-x: scroll;
+  }
+
+  .data-table {
+    min-width: 110%;
+  }
 }
 
