@@ -18,8 +18,7 @@ export default function App() {
             className="brand-logo"
           />
           <div className="brand-name">
-            <span className="brand-accent">M</span>ONITORING &nbsp;
-            <span className="brand-accent">H</span>UB
+            <span className="brand-accent">M</span>ONITORING &nbsp;HUB
           </div>
         </Link>
 
