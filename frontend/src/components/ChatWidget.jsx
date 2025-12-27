@@ -120,6 +120,7 @@ export default function ChatWidget() {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={loading || cooldownActive}
+            maxLength={250}
           />
           <button
             className="chat-send"

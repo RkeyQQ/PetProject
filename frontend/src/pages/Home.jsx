@@ -62,7 +62,7 @@ export default function Home() {
         </div>
       </section>
       <section className="info-section">
-        <p className="hero-subtitle">Exceeding expectations</p>
+        <p className="hero-subtitle">Exceeding Expectations</p>
         <div className="card mid wide">
           <p>
             This SaaS-style pet project is built as a modern full-stack solution
@@ -72,12 +72,14 @@ export default function Home() {
             <strong>JavaScript</strong>.
           </p>
           <p>
-            <strong>ATTENTION:</strong> both the application and the API are
-            deployed on <strong>Google Cloud</strong> using{" "}
-            <strong>Cloud Run</strong> and <strong>Firebase Hosting</strong>. As
-            they run on the free public cloud tier, the very first API call may
-            experience a slight cold-start delay — a natural trade-off for
-            serverless efficiency.
+            <span className="brand-accent">
+              <strong>ATTENTION:</strong>
+            </span>{" "}
+            both the application and the API are deployed on{" "}
+            <strong>Google Cloud</strong> using <strong>Cloud Run</strong> and{" "}
+            <strong>Firebase Hosting</strong>. As they run on the free public
+            cloud tier, the very first API call may experience a slight
+            cold-start delay — a natural trade-off for serverless efficiency.
           </p>
           <p>
             The entire solution is containerized with <strong>Docker</strong>,
@@ -87,13 +89,10 @@ export default function Home() {
             deployments directly from the repository.
           </p>
           <p>
-            <em>
-              <span className="brand-accent">
-                #AI #Python #FastAPI #React #Vite #JavaScript #Docker
-                #GoogleCloud #CloudRun #FirebaseHosting #CI/CD #GitHubActions
-                #Fullstack #SaaS #IndieDev
-              </span>
-            </em>
+            <span className="brand-accent">Technologies: </span>
+            AI, Fullstack, Python, FastAPI, React, Vite, JavaScript, Google
+            Cloud, CloudRun, FirebaseHosting, Docker, CI/CD, GitHubActions,
+            SaaS, IndieDev.
           </p>
         </div>
       </section>
