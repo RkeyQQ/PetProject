@@ -1,19 +1,17 @@
-"""
-Secrets management for local development and GCP production.
+"""Secrets management for local development and GCP production.
 
 Local Development:
   - Reads from .env.local (OPENAI_API_KEY)
 
 GCP Production:
-  - Reads from GCP Secret Manager (requires GOOGLE_CLOUD_PROJECT env var)
+  - Reads from GCP Secret Manager (GOOGLE_CLOUD_PROJECT)
 """
 
 import os
 
 
 def get_openai_api_key() -> str:
-    """
-    Get OpenAI API key from environment or GCP Secret Manager.
+    """Get OpenAI API key from environment or GCP Secret Manager.
 
     Priority:
     1. Environment variable OPENAI_API_KEY (set by .env.local or system)
@@ -24,23 +22,12 @@ def get_openai_api_key() -> str:
 
     Raises:
         ValueError: If key not found in any source
-    """
 
-    # ========== LOCAL DEVELOPMENT ==========
-    # For local development, use .env.local file:
-    # OPENAI_API_KEY=sk-proj-your-actual-key-here
+    """
     api_key = os.getenv("OPENAI_API_KEY")
     if api_key:
         print("[INFO] Using OPENAI_API_KEY from environment (.env.local or system)")
         return api_key
-
-    # ========== GCP PRODUCTION ==========
-    # For GCP production, use Secret Manager:
-    # 1. Set GOOGLE_CLOUD_PROJECT environment variable
-    # 2. Create secret: gcloud secrets create openai-api-key --data-file=-
-    # 3. Grant permission: gcloud secrets add-iam-policy-binding openai-api-key \
-    #      --member=serviceAccount:YOUR_SERVICE_ACCOUNT \
-    #      --role=roles/secretmanager.secretAccessor
 
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     if project_id:
@@ -55,7 +42,8 @@ def get_openai_api_key() -> str:
             api_key = response.payload.data.decode("UTF-8").strip()
 
             print(
-                f"[INFO] Using OPENAI_API_KEY from GCP Secret Manager (project: {project_id})"
+                f"[INFO] Using OPENAI_API_KEY from GCP Secret Manager "
+                f"(project: {project_id})"
             )
             return api_key
         except Exception as e:
@@ -64,9 +52,9 @@ def get_openai_api_key() -> str:
                 f"Project: {project_id}, Error: {e}"
             )
 
-    # ========== ERROR ==========
     raise ValueError(
         "OPENAI_API_KEY not configured. "
         "For local development: set OPENAI_API_KEY in .env.local\n"
-        "For GCP production: set GOOGLE_CLOUD_PROJECT and create secret 'openai-api-key'"
+        "For GCP production: set GOOGLE_CLOUD_PROJECT "
+        "and create secret 'openai-api-key'"
     )

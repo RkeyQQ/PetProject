@@ -171,14 +171,14 @@
 }
 
 .bar-chart__link {
-  color: #59ba57ff;
+  color: #9aa0a6;
   font-weight: 600;
   text-decoration: none;
 }
 
 .bar-chart__link:hover {
-  color: #85d383ff;
-  text-decoration: underline;
+  color: #9aa0a6;
+  text-decoration: none;
 }
 
 .bar-chart__legend {
